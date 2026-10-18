@@ -70,26 +70,39 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--with-users", action="store_true", help="Create demo accounts from password environment variables.")
         parser.add_argument("--if-empty", action="store_true", help="Do not replace an existing competition setup.")
+        parser.add_argument(
+            "--open-demo-rounds",
+            action="store_true",
+            help="Keep the seeded demo rounds available for a full sample run-through.",
+        )
 
     def handle(self, *args, **options):
+        now = timezone.now()
+        competition = Competition.objects.filter(pk=1).first()
         if options["if_empty"] and Round.objects.exists():
+            if options["open_demo_rounds"] and competition and competition.demo_data:
+                Round.objects.filter(slug__in=[item["slug"] for item in ROUNDS]).update(
+                    status=Round.Status.OPEN,
+                    opens_at=now - timedelta(days=1),
+                    closes_at=now + timedelta(days=14),
+                )
+                self.stdout.write("Opened all sample rounds for the demo; qualification gates still apply.")
             self.stdout.write("Competition rounds already exist; preserving current event configuration.")
             return
-        competition, _ = Competition.objects.update_or_create(
-            pk=1, defaults={"name": "Code Battle", "demo_data": True}
-        )
-        now = timezone.now()
+        if competition is None:
+            competition = Competition.objects.create(pk=1, name="Code Battle", demo_data=True)
         rounds = {}
         for index, item in enumerate(ROUNDS):
-            opens_at = now - timedelta(days=1) if index == 0 else now + timedelta(days=index)
-            closes_at = now + timedelta(days=14) if index == 0 else opens_at + timedelta(days=2)
+            open_demo_rounds = options["open_demo_rounds"] and competition.demo_data
+            opens_at = now - timedelta(days=1) if open_demo_rounds or index == 0 else now + timedelta(days=index)
+            closes_at = now + timedelta(days=14) if open_demo_rounds or index == 0 else opens_at + timedelta(days=2)
             round_obj, _ = Round.objects.update_or_create(
                 slug=item["slug"],
                 defaults={
                     "title": item["title"],
                     "description": item["description"],
                     "order": index + 1,
-                    "status": item["status"],
+                    "status": Round.Status.OPEN if open_demo_rounds else item["status"],
                     "opens_at": opens_at,
                     "closes_at": closes_at,
                     "duration_minutes": item["duration"],

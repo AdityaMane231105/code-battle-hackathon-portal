@@ -1,6 +1,8 @@
 from datetime import timedelta
+from io import StringIO
 
 from django.contrib.auth.models import User
+from django.core.management import call_command
 from django.contrib.staticfiles import finders
 from django.test import TestCase
 from django.urls import reverse
@@ -302,3 +304,32 @@ class CompetitionFlowTests(TestCase):
         competition.refresh_from_db()
         self.assertRedirects(response, reverse("staff_dashboard"))
         self.assertTrue(competition.results_published)
+
+    def test_demo_seed_opens_existing_sample_rounds_for_qualification_gated_play(self):
+        Competition.objects.create(pk=1, demo_data=True)
+        Round.objects.filter(pk__in=[self.quiz.pk, self.coding_round.pk]).update(status=Round.Status.SCHEDULED)
+        call_command(
+            "seed_demo",
+            "--if-empty",
+            "--open-demo-rounds",
+            stdout=StringIO(),
+        )
+        self.quiz.refresh_from_db()
+        self.coding_round.refresh_from_db()
+        self.assertTrue(self.quiz.is_open_now)
+        self.assertTrue(self.coding_round.is_open_now)
+        self.assertFalse(can_enter_round(self.user, self.coding_round))
+
+    def test_demo_seed_does_not_open_rounds_when_demo_data_is_disabled(self):
+        Competition.objects.create(pk=1, demo_data=False)
+        Round.objects.filter(pk__in=[self.quiz.pk, self.coding_round.pk]).update(status=Round.Status.SCHEDULED)
+        call_command(
+            "seed_demo",
+            "--if-empty",
+            "--open-demo-rounds",
+            stdout=StringIO(),
+        )
+        self.quiz.refresh_from_db()
+        self.coding_round.refresh_from_db()
+        self.assertEqual(self.quiz.status, Round.Status.SCHEDULED)
+        self.assertEqual(self.coding_round.status, Round.Status.SCHEDULED)

@@ -79,13 +79,14 @@ Copy `.env.example` and set these variables in the process environment:
 | --- | --- |
 | `DJANGO_SECRET_KEY` | Long, random secret; required when `DJANGO_DEBUG=False`. |
 | `DJANGO_DEBUG` | Set to `False` in production. |
+| `DJANGO_SECURE_SSL_REDIRECT` | Render already enforces HTTPS at its TLS edge; set `False` behind Render to avoid redirect loops. |
 | `DJANGO_ALLOWED_HOSTS` | Comma-separated host names for the deployment. |
 | `DJANGO_CSRF_TRUSTED_ORIGINS` | Optional comma-separated HTTPS origins behind a proxy. |
 | `DATABASE_PATH` | SQLite database path; defaults to `db.sqlite3` in the project root. |
 | `DEMO_ADMIN_PASSWORD`, `DEMO_PARTICIPANT_PASSWORD` | Optional secrets used only by `seed_demo --with-users`. |
 | `ADMIN_USERNAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` | One-time initial Render staff-account setup used by `bootstrap_admin`; an existing account is never reset by the command. |
 
-The application enables secure session/CSRF cookies, HTTPS redirects outside Render, HSTS, clickjacking protection, and content-type protection when `DJANGO_DEBUG=False`. Render terminates TLS and enforces HTTPS at its edge; cookies remain secure. Keep SQLite on persistent storage for production.
+The application enables secure session/CSRF cookies, HSTS, clickjacking protection, and content-type protection when `DJANGO_DEBUG=False`. Render terminates TLS and enforces HTTPS at its edge; Django redirects are disabled there to prevent proxy redirect loops. Keep SQLite on persistent storage for production.
 
 ## Deploy to Render
 
