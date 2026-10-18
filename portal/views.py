@@ -30,7 +30,7 @@ def register(request):
             user.profile.institution = form.cleaned_data["institution"]
             user.profile.save(update_fields=["display_name", "institution"])
         login(request, user)
-        messages.success(request, "Your participant account is ready.")
+        messages.success(request, "Account created successfully! You are now signed in.")
         return redirect("dashboard")
     return render(request, "registration/register.html", {"form": form})
 

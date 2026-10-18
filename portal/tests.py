@@ -73,8 +73,10 @@ class CompetitionFlowTests(TestCase):
                 "password1": "A-long-password-981",
                 "password2": "A-long-password-981",
             },
+            follow=True,
         )
-        self.assertRedirects(response, reverse("dashboard"))
+        self.assertEqual(response.redirect_chain, [(reverse("dashboard"), 302)])
+        self.assertContains(response, "Account created successfully! You are now signed in.")
         profile = Profile.objects.get(user__username="new-builder")
         self.assertEqual(profile.role, Profile.Role.PARTICIPANT)
         self.assertEqual(profile.institution, "Open Lab")
