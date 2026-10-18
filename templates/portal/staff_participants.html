@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Participants{% endblock %}
+{% block content %}
+<section class="page-shell">
+  <a class="back-link" href="{% url 'staff_dashboard' %}">← Back to operations</a>
+  <div class="page-heading"><div><div class="eyebrow">COMPETITION ROSTER</div><h1>Participants<span class="text-accent">.</span></h1><p>Registered participant accounts and their qualification progress.</p></div><a class="button button-outline" href="{% url 'admin:portal_profile_changelist' %}">Manage accounts <span aria-hidden="true">↗</span></a></div>
+  <div class="leaderboard-wrap"><table class="leaderboard-table"><caption class="sr-only">Registered participants</caption><thead><tr><th scope="col">PARTICIPANT</th><th scope="col">INSTITUTION</th><th scope="col">ACCOUNT CREATED</th><th scope="col">STATUS</th></tr></thead><tbody>
+    {% for profile in participants %}<tr><td><div class="participant-cell"><span class="avatar avatar-table">{{ profile.display_name|first|upper }}</span><span><strong>{{ profile.display_name }}</strong><small>{{ profile.user.email }}</small></span></div></td><td>{{ profile.institution|default:"—" }}</td><td>{{ profile.user.date_joined|date:"M j, Y" }}</td><td><span class="status {% if profile.user.is_active %}status-open{% else %}status-closed{% endif %}">{% if profile.user.is_active %}ACTIVE{% else %}DISABLED{% endif %}</span></td></tr>
+    {% empty %}<tr><td colspan="4"><div class="empty-state table-empty"><span>✳</span><h3>No participants registered.</h3><p>New participant accounts will appear here.</p></div></td></tr>{% endfor %}
+  </tbody></table></div>
+</section>
+{% endblock %}

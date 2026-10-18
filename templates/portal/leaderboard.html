@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load portal_tags %}
+{% block title %}Leaderboard{% endblock %}
+{% block content %}
+<section class="page-shell">
+  <div class="page-heading leaderboard-heading"><div><div class="eyebrow">{% if competition.results_published %}FINAL RESULTS{% else %}LIVE STANDINGS{% endif %}</div><h1>The leaderboard<span class="text-accent">.</span></h1><p>{% if competition.results_published %}Official final results have been published by the competition team.{% else %}Standings update as submissions are graded. Pending manual reviews are not included in scores.{% endif %}</p></div><div class="leaderboard-marker"><span class="live-dot"></span>{% if competition.results_published %}FINAL{% else %}PROVISIONAL{% endif %}</div></div>
+  {% if competition.demo_data %}<div class="notice notice-demo"><strong>Sample leaderboard.</strong> These seeded entries and scores are illustrative—not live competition results.</div>{% endif %}
+  <div class="leaderboard-wrap">
+    <table class="leaderboard-table"><caption class="sr-only">Competition scores and rankings</caption><thead><tr><th scope="col">RANK</th><th scope="col">PARTICIPANT</th>{% for round in rounds %}<th scope="col" class="score-col">R{{ round.order }}</th>{% endfor %}<th scope="col" class="total-col">TOTAL</th></tr></thead><tbody>
+      {% for row in rows %}<tr class="{% if forloop.first %}leader-row{% endif %}"><td><span class="rank-badge {% if forloop.counter == 1 %}rank-first{% endif %}">{% if forloop.counter == 1 %}✳{% else %}{{ forloop.counter|stringformat:"02d" }}{% endif %}</span></td><td><div class="participant-cell"><span class="avatar avatar-table">{{ row.name|first|upper }}</span><span><strong>{{ row.name }}</strong><small>{{ row.institution|default:"Independent participant" }}</small></span></div></td>{% for round in rounds %}{% with score=row.round_scores|score_for:round.pk %}<td class="score-col">{% if score %}<span class="table-score">{{ score.score }}</span>{% elif score == 0 %}<span class="table-score">0</span>{% else %}<span class="table-dash">—</span>{% endif %}</td>{% endwith %}{% endfor %}<td class="total-col"><strong>{{ row.score }}</strong><small>pts</small></td></tr>
+      {% empty %}<tr><td colspan="7"><div class="empty-state table-empty"><span>✳</span><h3>No ranked participants yet.</h3><p>Complete a round to appear on the leaderboard.</p></div></td></tr>{% endfor %}
+    </tbody></table>
+  </div>
+  <div class="leaderboard-foot"><span>RANKINGS INCLUDE ONLY GRADED SUBMISSIONS</span><span>{% if last_updated %}Latest score graded {{ last_updated|date:"M j, Y · P" }}{% else %}Standings refresh when this page is loaded{% endif %}</span></div>
+</section>
+{% endblock %}

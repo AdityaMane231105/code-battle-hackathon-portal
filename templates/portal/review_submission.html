@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load portal_tags %}
+{% block title %}Review submission{% endblock %}
+{% block content %}
+<section class="page-shell narrow-shell">
+  <a class="back-link" href="{% url 'staff_dashboard' %}">← Back to operations</a>
+  <div class="page-heading"><div><div class="eyebrow">MANUAL EVALUATION · {{ submission.round.title|upper }}</div><h1>Review submission<span class="text-accent">.</span></h1><p>Submitted by {{ submission.user.profile.display_name }} on {{ submission.submitted_at|date:"M j, Y · P" }}.</p></div></div>
+  <div class="panel-card answer-review">
+    {% for challenge in challenges %}<article class="review-answer"><span class="challenge-label">CHALLENGE 0{{ forloop.counter }}</span><h2>{{ challenge.title }}</h2><p>{{ challenge.prompt }}</p>{% with answer=submission.answers|answer_for:challenge.pk %}<pre class="submitted-answer">{% if answer %}{{ answer }}{% else %}No answer provided before time expired.{% endif %}</pre>{% endwith %}</article>{% endfor %}
+  </div>
+  <div class="panel-card"><div class="eyebrow">RECORD YOUR EVALUATION</div><form method="post" class="form-stack" novalidate>{% csrf_token %}{% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+    <div class="field"><label for="{{ form.score.id_for_label }}">Score</label>{{ form.score }}<small class="help-text">{{ form.score.help_text }}</small>{{ form.score.errors }}</div>
+    <div class="field"><label for="{{ form.feedback.id_for_label }}">Feedback for participant</label>{{ form.feedback }}{{ form.feedback.errors }}</div>
+    <div class="form-actions"><a href="{% url 'staff_dashboard' %}" class="button button-quiet">Cancel</a><button class="button button-primary" type="submit">Save grade <span aria-hidden="true">↗</span></button></div>
+  </form></div>
+</section>
+{% endblock %}

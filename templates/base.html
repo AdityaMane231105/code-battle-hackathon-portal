@@ -1,0 +1,75 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f4">
+  <meta name="description" content="Code Battle — compete, learn, and climb the leaderboard.">
+  <link rel="icon" type="image/svg+xml" href="{% static 'portal/favicon.svg' %}">
+  <title>{% block title %}Code Battle{% endblock %} · Online Hackathon</title>
+  <link rel="stylesheet" href="{% static 'portal/app.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="nav-wrap">
+      <a class="brand" href="{% url 'home' %}" aria-label="Code Battle home">
+        <span class="brand-mark" aria-hidden="true">CB</span>
+        <span>code<span class="brand-light">battle</span></span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        {% if user.is_authenticated %}
+          <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">My arena</a>
+          <a href="{% url 'leaderboard' %}" class="{% if request.resolver_match.url_name == 'leaderboard' %}active{% endif %}">Leaderboard</a>
+          {% if user.is_staff %}<a href="{% url 'staff_dashboard' %}">Operations</a>{% endif %}
+        {% else %}
+          <a href="#rounds">The rounds</a>
+          <a href="#how-it-works">How it works</a>
+        {% endif %}
+      </nav>
+      <div class="nav-actions">
+        {% if user.is_authenticated %}
+          <a class="nav-profile" href="{% url 'profile' %}"><span class="avatar">{{ user.profile.display_name|first|upper }}</span><span>{{ user.profile.display_name }}</span></a>
+          <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="button button-quiet button-small" type="submit">Sign out</button></form>
+        {% else %}
+          <a class="button button-quiet button-small" href="{% url 'login' %}">Sign in</a>
+          <a class="button button-primary button-small" href="{% url 'register' %}">Join the battle <span aria-hidden="true">↗</span></a>
+        {% endif %}
+      </div>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open navigation"><span></span><span></span></button>
+    </div>
+    <div class="mobile-nav" id="mobile-nav" hidden>
+      {% if user.is_authenticated %}
+        <a href="{% url 'dashboard' %}">My arena</a><a href="{% url 'leaderboard' %}">Leaderboard</a>
+        {% if user.is_staff %}<a href="{% url 'staff_dashboard' %}">Operations</a>{% endif %}
+        <a href="{% url 'profile' %}">Profile</a>
+      {% else %}
+        <a href="#rounds">The rounds</a><a href="#how-it-works">How it works</a>
+        <a href="{% url 'login' %}">Sign in</a><a href="{% url 'register' %}">Create account</a>
+      {% endif %}
+    </div>
+  </header>
+
+  {% if competition.demo_data %}
+  <div class="demo-banner" role="status"><span aria-hidden="true">✳</span> DEMO ENVIRONMENT <span class="demo-banner-detail">— sample data only, not live competition results</span></div>
+  {% endif %}
+  {% if messages %}
+    <div class="flash-stack" aria-live="polite" aria-atomic="true">
+      {% for message in messages %}<div class="flash flash-{{ message.tags|default:'info' }}"><span>{{ message }}</span><button type="button" class="flash-close" aria-label="Dismiss message">×</button></div>{% endfor %}
+    </div>
+  {% endif %}
+
+  <main id="main-content">{% block content %}{% endblock %}</main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <a class="brand footer-brand" href="{% url 'home' %}"><span class="brand-mark" aria-hidden="true">CB</span><span>code<span class="brand-light">battle</span></span></a>
+      <p>Think sharp. Ship smart. Play fair.</p>
+      <span class="footer-meta">Built for the next generation of builders</span>
+    </div>
+  </footer>
+  <script src="{% static 'portal/app.js' %}" defer></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

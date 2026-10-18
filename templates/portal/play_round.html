@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static portal_tags %}
+{% block title %}{{ round.title }} challenge{% endblock %}
+{% block extra_head %}<meta name="robots" content="noindex,nofollow">{% endblock %}
+{% block content %}
+<section class="page-shell challenge-shell">
+  <div class="challenge-top"><div><div class="eyebrow">ROUND 0{{ round.order }} / 04</div><h1>{{ round.title }}</h1><p>Read each prompt carefully. Your answers are final when submitted.</p></div><div class="timer-card" role="timer" aria-live="off" data-countdown="{{ remaining_seconds }}"><span>TIME REMAINING</span><strong id="countdown">{{ remaining_seconds }}</strong><small>MIN : SEC</small></div></div>
+  <div class="progress-track" aria-label="Challenge progress"><span style="width: 0%" id="challenge-progress"></span></div>
+  <form method="post" class="challenge-form" id="challenge-form">{% csrf_token %}
+    {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+    {% for challenge in challenges %}
+    <article class="challenge-card">
+      <div class="challenge-card-head"><div><span class="challenge-label">CHALLENGE 0{{ forloop.counter }}</span><h2>{{ challenge.title }}</h2></div><span class="points-tag">{{ challenge.points }} PTS</span></div>
+      <p class="challenge-prompt">{{ challenge.prompt }}</p>
+      {% if challenge.starter_code %}<pre class="code-sample"><code>{{ challenge.starter_code }}</code></pre>{% endif %}
+      <div class="field challenge-field"><label for="id_answer_{{ challenge.pk }}">{% if challenge.kind == "objective" %}Choose one answer{% elif challenge.kind == "coding" %}Your approach and code{% elif challenge.kind == "debugging" %}Your diagnosis and corrected code{% else %}Your response{% endif %}<span aria-hidden="true"> *</span></label>
+        {% with field=form|challenge_field:challenge %}
+        {% if challenge.kind == "objective" %}
+          {{ field }}
+        {% else %}
+          {{ field }}
+        {% endif %}
+        {{ field.errors }}
+        {% endwith %}
+      </div>
+    </article>
+    {% endfor %}
+    <div class="challenge-submit"><p>Once submitted, you can’t change your answers.</p><button class="button button-primary button-large" type="submit" data-confirm-submit>Submit my answers <span aria-hidden="true">↗</span></button></div>
+  </form>
+</section>
+{% endblock %}
+{% block extra_scripts %}<script src="{% static 'portal/timer.js' %}" defer></script>{% endblock %}

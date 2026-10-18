@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Submission status{% endblock %}
+{% block content %}
+<section class="page-shell narrow-shell">
+  <a class="back-link" href="{% url 'dashboard' %}">← Back to my arena</a>
+  <div class="result-card">
+    {% if submission.status == "graded" %}
+      <div class="result-icon result-complete" aria-hidden="true">✓</div><div class="eyebrow">ROUND 0{{ submission.round.order }} COMPLETE</div><h1>That’s a wrap<span class="text-accent">.</span></h1><p>Your submission has been scored. See how you did below.</p>
+      <div class="result-score"><span>YOUR SCORE</span><strong>{{ submission.score }}<small> / {{ submission.round.max_score }} pts</small></strong></div>
+      {% if submission.round.order < 4 %}{% if submission.score >= submission.round.passing_score %}<div class="qualification-note qualification-pass"><strong>You qualified for the next round.</strong><span>Check your arena for the next challenge when it opens.</span></div>{% else %}<div class="qualification-note qualification-pending"><strong>Keep learning and come back stronger.</strong><span>You needed {{ submission.round.passing_score }} points to qualify.</span></div>{% endif %}{% endif %}
+      {% if submission.feedback %}<div class="feedback-box"><div class="eyebrow">REVIEWER FEEDBACK</div><p>{{ submission.feedback|linebreaksbr }}</p></div>{% endif %}
+    {% elif submission.status == "submitted" %}
+      <div class="result-icon result-review" aria-hidden="true">↗</div><div class="eyebrow">SUBMISSION RECEIVED</div><h1>In good hands<span class="text-accent">.</span></h1><p>Your answers are with the competition team for manual review. Your score and qualification status will update as soon as it’s graded.</p>
+      <div class="review-status"><span class="status status-review">AWAITING REVIEW</span><span>Submitted {{ submission.submitted_at|date:"M j, Y · P" }}</span></div>
+    {% else %}
+      <div class="result-icon result-review" aria-hidden="true">◷</div><div class="eyebrow">ATTEMPT IN PROGRESS</div><h1>The clock is still running<span class="text-accent">.</span></h1><p>This attempt has not been submitted yet.</p><a class="button button-primary" href="{% url 'play_round' submission.round.slug %}">Resume challenge <span aria-hidden="true">→</span></a>
+    {% endif %}
+    <div class="result-actions"><a href="{% url 'dashboard' %}" class="button button-dark">Back to my arena <span aria-hidden="true">→</span></a><a href="{% url 'leaderboard' %}" class="text-link">View leaderboard <span aria-hidden="true">↗</span></a></div>
+  </div>
+</section>
+{% endblock %}

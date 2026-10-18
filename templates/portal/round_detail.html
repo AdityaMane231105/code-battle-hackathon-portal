@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ round.title }}{% endblock %}
+{% block content %}
+<section class="page-shell">
+  <a class="back-link" href="{% url 'dashboard' %}">← Back to my arena</a>
+  <div class="round-detail-head"><div><div class="eyebrow">ROUND 0{{ round.order }} / 04 <span class="eyebrow-divider">·</span> {{ round.duration_minutes }} MINUTES</div><h1>{{ round.title }}<span class="text-accent">.</span></h1><p>{{ round.description }}</p></div><span class="status status-{{ round.status }}">{{ round.get_status_display }}</span></div>
+  <div class="detail-grid">
+    <div class="panel-card"><div class="eyebrow">WHAT TO EXPECT</div><h2>{{ round.challenges.count }} challenge{{ round.challenges.count|pluralize }}. One attempt.</h2><p>You’ll have {{ round.duration_minutes }} minutes from the moment you start. Your attempt is saved, so you can return to it, but the timer keeps running.</p><ul class="check-list"><li>Read every prompt before submitting.</li><li>Objective questions are scored automatically.</li><li>Code and debugging answers go to an administrator for review; code is not executed.</li><li>Submissions are final. Check your answers first.</li></ul>
+      <div class="detail-meta"><div><small>PASSING SCORE</small><strong>{{ round.passing_score }} pts</strong></div><div><small>POSSIBLE POINTS</small><strong>{{ round.max_score }} pts</strong></div><div><small>CHALLENGES</small><strong>{{ round.challenges.count }}</strong></div></div>
+    </div>
+    <aside class="panel-card detail-action"><div class="eyebrow">YOUR ENTRY</div>
+      {% if submission %}
+        {% if submission.status == "in_progress" %}<h3>Your timer is running.</h3><p>Your attempt is in progress. Resume when you’re ready, but remember the clock doesn’t stop.</p><a class="button button-primary button-full" href="{% url 'play_round' round.slug %}">Resume challenge <span aria-hidden="true">→</span></a>
+        {% else %}<h3>Attempt submitted</h3><p>You’ve already used your one attempt for this round.</p><a class="button button-outline button-full" href="{% url 'submission_result' submission.pk %}">View submission status <span aria-hidden="true">→</span></a>{% endif %}
+      {% elif can_enter %}
+        {% if round.opens_at %}<p>Opens {{ round.opens_at|date:"M j, Y, P" }}{% if round.closes_at %}<br>Closes {{ round.closes_at|date:"M j, Y, P" }}{% endif %}</p>{% else %}<p>This round is open now. Your timer begins as soon as you enter.</p>{% endif %}
+        <form method="post" action="{% url 'start_round' round.slug %}">{% csrf_token %}<button class="button button-primary button-full" type="submit">Start the round <span aria-hidden="true">↗</span></button></form>
+      {% elif previous_round and not qualified %}<h3>Earn your way in.</h3><p>Complete {{ previous_round.title }} with at least {{ previous_round.passing_score }} points to qualify.</p>
+      {% elif previous_round and not round.is_open_now %}<h3>Round not open yet.</h3><p>You have qualified, but the organizer has not opened this round yet. Check back when the schedule is active.</p>
+      {% else %}<h3>Not open just yet.</h3><p>This round is currently {{ round.get_status_display|lower }}. Check back when the organizer opens it.</p>{% endif %}
+    </aside>
+  </div>
+</section>
+{% endblock %}

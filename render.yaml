@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: code-battle-portal
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: python manage.py migrate && python manage.py seed_demo --if-empty && python manage.py bootstrap_admin && waitress-serve --listen=0.0.0.0:$PORT codebattle.wsgi:application
+    healthCheckPath: /health/
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: 127.0.0.1,localhost
+      - key: DATABASE_PATH
+        value: /var/data/db.sqlite3
+      - key: ADMIN_USERNAME
+        value: organizer
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        generateValue: true
+    disk:
+      name: code-battle-data
+      mountPath: /var/data
+      sizeGB: 1

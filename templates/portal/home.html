@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Compete with the best{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow"><span class="live-dot"></span> THE ONLINE HACKATHON ARENA</div>
+      <h1>Good code.<br><span class="text-accent">Great minds.</span><br>One champion.</h1>
+      <p class="hero-lede">Four rounds. One leaderboard. A chance to prove what you can build. Step into the arena and let your work do the talking.</p>
+      <div class="hero-actions"><a class="button button-primary button-large" href="{% url 'register' %}">Enter the arena <span aria-hidden="true">↗</span></a><a class="text-link" href="#rounds">Explore the rounds <span aria-hidden="true">↓</span></a></div>
+      <div class="hero-proof"><div class="proof-avatars" aria-hidden="true"><span>A</span><span>M</span><span>+</span></div><span>Built for curious minds<br><strong>and fearless problem-solvers</strong></span></div>
+    </div>
+    <div class="hero-art" aria-label="Decorative illustration of a code editor and competition score">
+      <div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
+      <div class="code-card">
+        <div class="code-card-top"><div class="window-dots"><i></i><i></i><i></i></div><span>solution.py</span><span class="code-card-status"><b></b> ready</span></div>
+        <div class="code-lines" aria-hidden="true">
+          <span class="line-no">01</span><span><em>def</em> <strong>find_the_signal</strong>(data):</span>
+          <span class="line-no">02</span><span class="indent"><em>for</em> signal <em>in</em> data:</span>
+          <span class="line-no">03</span><span class="indent-more"><em>if</em> signal.is_brilliant():</span>
+          <span class="line-no">04</span><span class="indent-more indent-double"><em>return</em> <b>"you"</b></span>
+          <span class="line-no">05</span><span class="indent"><em>return</em> <b>"keep going"</b></span>
+        </div>
+        <div class="code-score"><span><small>YOUR NEXT CHALLENGE</small><strong>is waiting.</strong></span><span class="score-icon" aria-hidden="true">↗</span></div>
+      </div>
+      <div class="floating-chip chip-round"><span class="chip-icon">01</span><span>ROUND ONE<br><strong>Quiz Battle</strong></span></div>
+      <div class="floating-chip chip-rank"><span class="rank-star">✳</span><span>RANK UP<br><strong>Keep climbing</strong></span></div>
+      <div class="hero-stamp"><span>CODE</span><strong>×</strong><span>COURAGE</span></div>
+    </div>
+  </div>
+  <div class="hero-bottom"><span>SCROLL TO EXPLORE</span><span class="scroll-line"></span><span>01 / 04</span></div>
+</section>
+<section class="intro-strip">
+  <p>Not just another hackathon.<br><strong>A proving ground for people who love to solve.</strong></p>
+  <div class="strip-stat"><strong>04</strong><span>CHALLENGE ROUNDS</span></div><div class="strip-stat"><strong>01</strong><span>FINAL CHAMPION</span></div><div class="strip-stat"><strong>∞</strong><span>WAYS TO THINK</span></div>
+</section>
+<section class="section rounds-section" id="rounds">
+  <div class="section-heading"><div><div class="eyebrow">THE BATTLE PLAN</div><h2>Four rounds.<br><span class="text-muted">One shot at the top.</span></h2></div><p>Every round brings a new kind of challenge. Earn your place in the next one, learn as you go, and keep your eyes on the prize.</p></div>
+  <div class="round-grid">
+    <article class="round-card round-card-lime"><span class="round-number">01 / THINK FAST</span><span class="round-symbol" aria-hidden="true">?</span><h3>Quiz Battle</h3><p>Quick-fire questions put your fundamentals to the test. Trust your instincts—and your knowledge.</p><span class="round-format">MULTIPLE CHOICE <span>·</span> TIMED</span></article>
+    <article class="round-card round-card-lilac"><span class="round-number">02 / BUILD SMART</span><span class="round-symbol" aria-hidden="true">&lt;/&gt;</span><h3>Coding Battle</h3><p>Turn a tricky problem into an elegant solution. Your approach matters as much as the answer.</p><span class="round-format">ALGORITHMS <span>·</span> MANUAL REVIEW</span></article>
+    <article class="round-card round-card-peach"><span class="round-number">03 / FIND THE BUG</span><span class="round-symbol" aria-hidden="true">⌁</span><h3>Debugging Battle</h3><p>Something’s not right. Trace the logic, find the flaw, and make the code whole again.</p><span class="round-format">CODE REVIEW <span>·</span> MANUAL REVIEW</span></article>
+    <article class="round-card round-card-blue"><span class="round-number">04 / GO ALL IN</span><span class="round-symbol" aria-hidden="true">✳</span><h3>Final Battle</h3><p>The hardest problems. The sharpest minds. Show us what you’re made of when it counts.</p><span class="round-format">ADVANCED CODING <span>·</span> QUALIFIED ONLY</span></article>
+  </div>
+</section>
+<section class="how-section" id="how-it-works">
+  <div class="how-art" aria-hidden="true"><div class="how-sun">✳</div><div class="how-orbit"></div><div class="how-label">YOUR IDEAS<br>HAVE A PLACE<br><strong>HERE.</strong></div><span class="how-small">MAKE IT<br>COUNT →</span></div>
+  <div class="how-copy"><div class="eyebrow">YOUR MOVE</div><h2>Show up.<br><span class="text-accent">Level up.</span><br>Leave a mark.</h2><p>Create a participant account, take on the open challenge, then qualify round by round. Your progress, scores, and rank live in your personal arena.</p><div class="step-list"><div><span>01</span><p><strong>Make it official</strong><small>Create a free account and set up your profile.</small></p></div><div><span>02</span><p><strong>Take the challenge</strong><small>Enter an open round and race the clock.</small></p></div><div><span>03</span><p><strong>Earn your next round</strong><small>Hit the qualification score to unlock what’s next.</small></p></div></div><a href="{% url 'register' %}" class="button button-dark">I’m in <span aria-hidden="true">↗</span></a></div>
+</section>
+<section class="closing-cta"><div class="eyebrow">YOUR NEXT CHAPTER STARTS HERE</div><h2>Ready to make<br>some <span>noise?</span></h2><a href="{% url 'register' %}" class="button button-primary button-large">Join Code Battle <span aria-hidden="true">↗</span></a><p>No entry fee. Just bring your best ideas.</p></section>
+{% endblock %}

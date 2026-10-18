@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Create your account{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <div class="auth-aside"><div class="eyebrow">MAKE YOUR MOVE</div><h1>The arena<br>looks good<br><span class="text-accent">on you.</span></h1><p>One profile gets you into every round. Build your name, then build your way up the leaderboard.</p><div class="auth-aside-note"><span>✳</span> YOUR NEXT CHALLENGE AWAITS</div></div>
+  <div class="auth-card"><div class="eyebrow">PARTICIPANT REGISTRATION</div><h2>Create an account</h2><p class="form-intro">All fields marked required are needed to enter the competition.</p>
+    <form method="post" class="form-stack" novalidate>{% csrf_token %}
+      {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+      {% for field in form %}<div class="field"><label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span aria-hidden="true"> *</span><span class="sr-only"> (required)</span>{% endif %}</label>{{ field }}{% if field.help_text %}<small class="help-text">{{ field.help_text|safe }}</small>{% endif %}{{ field.errors }}</div>{% endfor %}
+      <button type="submit" class="button button-primary button-full">Create my account <span aria-hidden="true">↗</span></button>
+    </form><p class="auth-switch">Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+  </div>
+</section>
+{% endblock %}

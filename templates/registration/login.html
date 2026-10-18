@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <div class="auth-aside"><div class="eyebrow">WELCOME BACK</div><h1>Your arena<br>is <span class="text-accent">waiting.</span></h1><p>Pick up where you left off. Your next challenge is only a sign-in away.</p><div class="auth-aside-note"><span>✳</span> THINK SHARP. PLAY FAIR.</div></div>
+  <div class="auth-card"><div class="eyebrow">PARTICIPANT ACCESS</div><h2>Sign in</h2><p class="form-intro">Good to have you back. Let’s get to it.</p>
+    <form method="post" class="form-stack" novalidate>{% csrf_token %}
+      {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+      <div class="field"><label for="{{ form.username.id_for_label }}">Username</label>{{ form.username }}{{ form.username.errors }}</div>
+      <div class="field"><label for="{{ form.password.id_for_label }}">Password</label>{{ form.password }}{{ form.password.errors }}</div>
+      <button type="submit" class="button button-primary button-full">Sign in <span aria-hidden="true">↗</span></button>
+    </form><p class="auth-switch">New around here? <a href="{% url 'register' %}">Create an account</a></p>
+  </div>
+</section>
+{% endblock %}
