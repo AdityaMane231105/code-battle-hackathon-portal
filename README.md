@@ -85,7 +85,7 @@ Copy `.env.example` and set these variables in the process environment:
 | `DEMO_ADMIN_PASSWORD`, `DEMO_PARTICIPANT_PASSWORD` | Optional secrets used only by `seed_demo --with-users`. |
 | `ADMIN_USERNAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` | One-time initial Render staff-account setup used by `bootstrap_admin`; an existing account is never reset by the command. |
 
-The application enables secure session/CSRF cookies, HTTPS redirects, HSTS, clickjacking protection, and content-type protection when `DJANGO_DEBUG=False`. The TLS-terminating host must forward HTTPS correctly. Keep the SQLite database on a persistent disk and back it up.
+The application enables secure session/CSRF cookies, HTTPS redirects outside Render, HSTS, clickjacking protection, and content-type protection when `DJANGO_DEBUG=False`. Render terminates TLS and enforces HTTPS at its edge; cookies remain secure. Keep SQLite on persistent storage for production.
 
 ## Deploy to Render
 

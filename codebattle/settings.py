@@ -113,7 +113,9 @@ CSRF_COOKIE_SAMESITE = "Lax"
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
+    # Render terminates TLS at its edge; avoid a redirect loop when its forwarded
+    # scheme header is omitted by an intermediate proxy.
+    SECURE_SSL_REDIRECT = not bool(render_hostname)
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
