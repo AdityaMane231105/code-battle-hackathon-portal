@@ -89,13 +89,13 @@ The application enables secure session/CSRF cookies, HTTPS redirects, HSTS, clic
 
 ## Deploy to Render
 
-The included `render.yaml` configures a single-instance **Starter** web service, runs migrations and first-deploy sample-data seeding, bootstraps the initial admin from Render environment variables, serves static files, and mounts a 1 GB persistent disk for SQLite. Persistent disks require a paid Render service; this setup is not compatible with an ephemeral free web service because its database would be lost on restart/redeploy. The deployment seed uses `--if-empty` so subsequent restarts preserve event settings.
+The included `render.yaml` configures a **Free** web service, runs migrations and sample-data seeding, bootstraps the initial admin from Render environment variables, and serves static files. This free deployment uses SQLite on Render's ephemeral filesystem: participant accounts, submissions, scores, and event changes can be lost when the instance restarts, sleeps, or deploys. Treat it as a demo only; do not use it for a real competition. For durable event data, change the service to a paid plan and attach persistent storage, or migrate to managed PostgreSQL. The deployment seed uses `--if-empty` to avoid overwriting event settings while the current instance filesystem remains intact.
 
 1. Push this project to a GitHub repository you control.
 2. In Render, choose **New → Blueprint**, connect the repository, and apply `render.yaml`.
 3. Render generates `DJANGO_SECRET_KEY` and `ADMIN_PASSWORD`; enter an `ADMIN_EMAIL` when prompted. The first deploy seeds the sample rounds and creates the `organizer` staff account. Find the generated admin password in that service’s environment settings; change it after the first sign-in.
 4. Wait for `/health/` to pass, open the `onrender.com` URL, and sign in at `/accounts/login/` with username `organizer` and the generated `ADMIN_PASSWORD`. Change it after the first sign-in. Open `/staff/` for event operations and `/django-admin/` to manage rounds and challenges.
-5. Keep the persistent disk attached. For a real event, review the seeded challenge prompts, change round schedules/statuses, disable the demo banner in Competition settings, and replace the generated bootstrap admin password. The seeded sample rounds are explicitly demo data.
+5. The free instance may sleep when idle, and local files are ephemeral. For a real event, upgrade to durable storage before collecting participant data. Review the seeded challenge prompts, change round schedules/statuses, disable the demo banner in Competition settings, and replace the generated bootstrap admin password. The seeded sample rounds are explicitly demo data.
 
 The service hostname is accepted automatically from Render’s `RENDER_EXTERNAL_HOSTNAME`. If you add a custom domain, add its host to `DJANGO_ALLOWED_HOSTS` and its `https://` origin to `DJANGO_CSRF_TRUSTED_ORIGINS`.
 
