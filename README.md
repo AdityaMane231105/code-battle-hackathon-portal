@@ -1,20 +1,63 @@
-# Code Battle — Online Hackathon Portal
+# Code Battle | Online Hackathon Portal
 
-Code Battle is a server-rendered Django application for a four-stage programming competition. It includes participant accounts and profiles, qualification-gated timed rounds, automatic multiple-choice scoring, manual code review, a scored leaderboard, and a protected staff console.
+**Live demo:** [code-battle-portal.onrender.com](https://code-battle-portal.onrender.com)
 
-## Architecture
+Code Battle is a Django-powered platform for running a multi-round programming competition. Participants create accounts, complete timed challenges, progress through qualification-gated rounds, and track results on a leaderboard. Organizers manage the event and review coding submissions through a protected staff console.
+
+> **Demo deployment:** The live site is intended for evaluation. Its free Render instance uses ephemeral storage, so accounts, submissions, scores, and event changes may be lost on restart or redeploy. Do not use it to host a real competition or collect sensitive data.
+
+## Contents
+
+- [Features](#features)
+- [Technology](#technology)
+- [Project structure](#project-structure)
+- [Run locally](#run-locally)
+- [Competition operations](#competition-operations)
+- [Configuration](#configuration)
+- [Deploy to Render](#deploy-to-render)
+- [Limitations and safety](#limitations-and-safety)
+
+## Features
+
+- Participant registration, profiles, and a protected dashboard
+- Timed, qualification-gated competition rounds
+- Automatic scoring for multiple-choice challenges
+- Staff review and grading for coding and debugging submissions
+- Leaderboards that show graded results
+- Organizer tools for managing participants, rounds, and submissions
+
+## Technology
 
 - **Django 5.2/6.x** provides authentication, CSRF protection, server-side forms, the ORM, and the staff admin. Python is the only application runtime; Node.js is not required.
 - **SQLite** persists users, profiles, rounds, challenges, attempts, scores, and review audit fields. The schema is defined in Django models and versioned with migrations.
 - **Django templates + responsive CSS/vanilla JavaScript** render the public site, participant area, timed attempts, and staff views.
 - **Waitress + WhiteNoise** provide a cross-platform WSGI server and static-file serving for a single-instance deployment.
 
+## Project structure
+
+```text
+.
+├── codebattle/              # Django project settings and URL/WSGI/ASGI entry points
+├── portal/                  # Competition models, views, forms, services, and tests
+│   ├── management/commands/ # Demo-data and administrator setup commands
+│   ├── migrations/          # Database schema migrations
+│   └── templatetags/        # Reusable template helpers
+├── templates/
+│   ├── portal/              # Competition and organizer pages
+│   └── registration/        # Authentication pages
+├── static/portal/           # CSS, JavaScript, and favicon
+├── .env.example             # Environment-variable reference
+├── manage.py                # Django management entry point
+├── render.yaml              # Render Blueprint deployment
+└── requirements.txt         # Python dependencies
+```
+
 ## Prerequisites
 
 - Python 3.12 or newer (Python 3.14 is supported by the current Django release).
 - `pip`.
 
-## Local setup
+## Run locally
 
 From the project root in PowerShell:
 
@@ -53,7 +96,7 @@ python manage.py createsuperuser
 
 Django superusers can access both `/django-admin/` and the staff console at `/staff/`.
 
-## Running tests and checks
+## Tests and checks
 
 ```powershell
 python manage.py test
@@ -112,7 +155,7 @@ waitress-serve --listen=0.0.0.0:8000 codebattle.wsgi:application
 
 Use the equivalent shell syntax for Linux-based hosting. Point the platform’s persistent disk at `DATABASE_PATH`, configure TLS at the edge, set the health check to `/`, and never run with `DJANGO_DEBUG=True` on a public deployment. A production multi-instance deployment should replace SQLite with PostgreSQL and provision backups, monitoring, and a managed secret store.
 
-## Known limitations and safety boundaries
+## Limitations and safety
 
 - **Untrusted code is not run.** Coding/debugging answers are safely stored as text and require staff review. Automatic execution needs a separately deployed, isolated runner with resource limits and an authenticated job API; no such service is bundled or claimed here.
 - The leaderboard refreshes when its page is loaded; this implementation does not provide push/real-time updates.
