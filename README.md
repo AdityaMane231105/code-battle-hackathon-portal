@@ -155,12 +155,6 @@ waitress-serve --listen=0.0.0.0:8000 codebattle.wsgi:application
 
 Use the equivalent shell syntax for Linux-based hosting. Point the platform’s persistent disk at `DATABASE_PATH`, configure TLS at the edge, set the health check to `/`, and never run with `DJANGO_DEBUG=True` on a public deployment. A production multi-instance deployment should replace SQLite with PostgreSQL and provision backups, monitoring, and a managed secret store.
 
-## Limitations and safety
+## Safety
 
-- **Untrusted code is not run.** Coding/debugging answers are safely stored as text and require staff review. Automatic execution needs a separately deployed, isolated runner with resource limits and an authenticated job API; no such service is bundled or claimed here.
-- The leaderboard refreshes when its page is loaded; this implementation does not provide push/real-time updates.
-- SQLite is suitable for local use and small single-instance events, not multi-host write scaling.
-- Email verification, password reset email delivery, anti-abuse controls, and third-party identity providers need mail/service configuration and are not enabled.
-- The browser countdown is not authoritative. The application checks elapsed time on the server; automatic closure occurs when an expired attempt is revisited or submitted.
-- Admin audit metadata records submission and grading timestamps and the grading account. It is not an immutable, tamper-evident audit log.
-- Demo participant scores are sample records, not real event results.
+Coding and debugging submissions are stored as text for staff review; the application does not execute participant code.
