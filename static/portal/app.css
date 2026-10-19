@@ -111,7 +111,9 @@ h1, h2, h3, p { margin-top: 0; }
 .section { max-width: 1190px; margin: auto; padding: 110px 0; }
 .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 40px; margin-bottom: 42px; }.section-heading h2, .how-copy h2 { margin: 13px 0 0; font-size: clamp(37px, 5vw, 57px); line-height: 1.04; letter-spacing: -.07em; }.section-heading > p { max-width: 350px; margin-bottom: 4px; color: var(--muted); font-size: 13px; line-height: 1.8; }
 .round-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; }
-.round-card { position: relative; overflow: hidden; min-height: 278px; padding: 22px 20px 20px; border-radius: 9px; }
+.round-card { position: relative; display: block; overflow: hidden; min-height: 278px; padding: 22px 20px 20px; border-radius: 9px; color: inherit; transition: transform .18s ease, box-shadow .18s ease; }
+.round-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.round-card:focus-visible { outline: 3px solid #7b9c36; outline-offset: -4px; }
 .round-card-lime { background: #eaf3d8; }.round-card-lilac { background: #ece8fb; }.round-card-peach { background: #fce8df; }.round-card-blue { background: #e2eef8; }
 .round-number, .round-format { display: block; color: #555c4d; font: 700 8px "DM Mono", Consolas, monospace; letter-spacing: .08em; }
 .round-symbol { position: absolute; top: 16px; right: 19px; display: grid; width: 43px; height: 43px; place-items: center; border: 1px solid rgba(32,37,30,.17); border-radius: 50%; font: 18px "DM Mono", Consolas, monospace; }

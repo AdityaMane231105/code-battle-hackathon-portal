@@ -37,10 +37,17 @@
 <section class="section rounds-section" id="rounds">
   <div class="section-heading"><div><div class="eyebrow">THE BATTLE PLAN</div><h2>Four rounds.<br><span class="text-muted">One shot at the top.</span></h2></div><p>Every round brings a new kind of challenge. Earn your place in the next one, learn as you go, and keep your eyes on the prize.</p></div>
   <div class="round-grid">
-    <article class="round-card round-card-lime"><span class="round-number">01 / THINK FAST</span><span class="round-symbol" aria-hidden="true">?</span><h3>Quiz Battle</h3><p>Quick-fire questions put your fundamentals to the test. Trust your instincts—and your knowledge.</p><span class="round-format">MULTIPLE CHOICE <span>·</span> TIMED</span></article>
-    <article class="round-card round-card-lilac"><span class="round-number">02 / BUILD SMART</span><span class="round-symbol" aria-hidden="true">&lt;/&gt;</span><h3>Coding Battle</h3><p>Turn a tricky problem into an elegant solution. Your approach matters as much as the answer.</p><span class="round-format">ALGORITHMS <span>·</span> MANUAL REVIEW</span></article>
-    <article class="round-card round-card-peach"><span class="round-number">03 / FIND THE BUG</span><span class="round-symbol" aria-hidden="true">⌁</span><h3>Debugging Battle</h3><p>Something’s not right. Trace the logic, find the flaw, and make the code whole again.</p><span class="round-format">CODE REVIEW <span>·</span> MANUAL REVIEW</span></article>
-    <article class="round-card round-card-blue"><span class="round-number">04 / GO ALL IN</span><span class="round-symbol" aria-hidden="true">✳</span><h3>Final Battle</h3><p>The hardest problems. The sharpest minds. Show us what you’re made of when it counts.</p><span class="round-format">ADVANCED CODING <span>·</span> QUALIFIED ONLY</span></article>
+    {% for round in rounds %}
+    <a class="round-card {% if round.order == 1 %}round-card-lime{% elif round.order == 2 %}round-card-lilac{% elif round.order == 3 %}round-card-peach{% else %}round-card-blue{% endif %}" href="{% url 'round_detail' round.slug %}" aria-label="View Round {{ round.order }}: {{ round.title }}">
+      <span class="round-number">0{{ round.order }} / {% if round.order == 1 %}THINK FAST{% elif round.order == 2 %}BUILD SMART{% elif round.order == 3 %}FIND THE BUG{% else %}GO ALL IN{% endif %}</span>
+      <span class="round-symbol" aria-hidden="true">{% if round.order == 1 %}?{% elif round.order == 2 %}&lt;/&gt;{% elif round.order == 3 %}⌁{% else %}✳{% endif %}</span>
+      <h3>{{ round.title }}</h3>
+      <p>{{ round.description }}</p>
+      <span class="round-format">{% if round.order == 1 %}MULTIPLE CHOICE <span>·</span> TIMED{% elif round.order == 2 %}ALGORITHMS <span>·</span> MANUAL REVIEW{% elif round.order == 3 %}CODE REVIEW <span>·</span> MANUAL REVIEW{% else %}ADVANCED CODING <span>·</span> QUALIFIED ONLY{% endif %}</span>
+    </a>
+    {% empty %}
+    <div class="empty-state"><span>✳</span><h3>Rounds are being prepared.</h3><p>Check back once the competition rounds have been published.</p></div>
+    {% endfor %}
   </div>
 </section>
 <section class="how-section" id="how-it-works">

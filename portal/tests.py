@@ -94,6 +94,21 @@ class CompetitionFlowTests(TestCase):
         self.assertContains(dashboard, "Your rounds")
         self.assertContains(dashboard, "Enter round")
 
+    def test_homepage_round_cards_link_to_their_round_pages(self):
+        response = self.client.get(reverse("home"))
+        self.assertEqual(response.status_code, 200)
+        for round_obj in (self.quiz, self.coding_round):
+            self.assertContains(response, f'href="{reverse("round_detail", args=[round_obj.slug])}"')
+            self.assertContains(response, f'aria-label="View Round {round_obj.order}: {round_obj.title}"')
+
+    def test_guest_round_page_redirects_to_sign_in_with_return_destination(self):
+        response = self.client.get(reverse("round_detail", args=[self.quiz.slug]))
+        self.assertRedirects(
+            response,
+            f'{reverse("login")}?next={reverse("round_detail", args=[self.quiz.slug])}',
+            fetch_redirect_response=False,
+        )
+
     def test_registration_rejects_display_names_longer_than_profile_limit(self):
         response = self.client.post(
             reverse("register"),
